@@ -4,12 +4,12 @@ import (
 	"net/url"
 
 	"github.com/go-macaron/captcha"
-	"github.com/midoks/imail/internal/app/context"
-	"github.com/midoks/imail/internal/app/form"
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/db"
-	"github.com/midoks/imail/internal/log"
-	"github.com/midoks/imail/internal/tools"
+	"github.com/phper95/mail-server/internal/app/context"
+	"github.com/phper95/mail-server/internal/app/form"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/db"
+	"github.com/phper95/mail-server/internal/log"
+	"github.com/phper95/mail-server/internal/tools"
 )
 
 const (
@@ -95,7 +95,6 @@ func Login(c *context.Context) {
 
 func LoginPost(c *context.Context, f form.SignIn) {
 	c.Title("sign_in")
-
 	loginBool, uid := db.LoginByUserPassword(f.UserName, f.Password)
 	if !loginBool {
 		c.FormErr("UserName", "Password")
@@ -117,13 +116,21 @@ func LoginPost(c *context.Context, f form.SignIn) {
 
 	if f.Remember {
 		days := 86400 * conf.Security.LoginRememberDays
-		c.SetCookie(conf.Security.CookieUsername, u.Name, days, conf.Web.Subpath, "", conf.Security.CookieSecure, true)
-		c.SetSuperSecureCookie(u.Salt+u.Password, conf.Security.CookieRememberName, u.Name, days, conf.Web.Subpath, "", conf.Security.CookieSecure, true)
+		//c.SetCookie(conf.Security.CookieUsername, u.Name, days, conf.Web.Subpath, "", conf.Security.CookieSecure, true)
+		c.SetCookie(conf.Security.CookieUsername, u.Name, days, conf.Web.Subpath, "")
+		c.SetSuperSecureCookie(u.Salt+u.Password, conf.Security.CookieRememberName, u.Name, days, conf.Web.Subpath, "")
 	}
 
-	_ = c.Session.Set("uid", uid)
-	_ = c.Session.Set("uname", f.UserName)
-
+	err = c.Session.Set("uid", uid)
+	if err != nil {
+		log.Errorf("session set error", err)
+		c.RenderWithErr("internal error", LOGIN, &f)
+	}
+	err = c.Session.Set("uname", f.UserName)
+	if err != nil {
+		log.Errorf("session set error", err)
+		c.RenderWithErr("internal error", LOGIN, &f)
+	}
 	// Clear whatever CSRF has right now, force to generate a new one
 	c.SetCookie(conf.Session.CSRFCookieName, "", -1, conf.Web.Subpath)
 	if conf.Security.EnableLoginStatusCookie {
@@ -136,7 +143,6 @@ func LoginPost(c *context.Context, f form.SignIn) {
 		c.Redirect(redirectTo)
 		return
 	}
-
 	c.RedirectSubpath("/")
 }
 

@@ -1,9 +1,9 @@
 package router
 
 import (
-	"github.com/midoks/imail/internal/app/context"
-	"github.com/midoks/imail/internal/app/router/mail"
-	"github.com/midoks/imail/internal/db"
+	"github.com/phper95/mail-server/internal/app/context"
+	"github.com/phper95/mail-server/internal/app/router/mail"
+	"github.com/phper95/mail-server/internal/db"
 )
 
 const (

@@ -5,7 +5,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/midoks/imail/internal/tools"
+	"github.com/phper95/mail-server/internal/tools"
 )
 
 type User struct {

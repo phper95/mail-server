@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/tools"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/tools"
 )
 
 type MailContent struct {
@@ -23,6 +23,7 @@ func (*MailContent) TableName() string {
 
 func MailContentDir(uid, mid int64) string {
 	dataPath := path.Join(conf.Web.AppDataPath, "mail", "user"+strconv.FormatInt(uid, 10), string(strconv.FormatInt(mid, 10)[0]))
+	fmt.Println("dataPath", dataPath)
 	return dataPath
 }
 

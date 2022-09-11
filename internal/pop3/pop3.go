@@ -9,10 +9,10 @@ import (
 	"strings"
 	"time"
 
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/db"
-	"github.com/midoks/imail/internal/log"
-	"github.com/midoks/imail/internal/tools"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/db"
+	"github.com/phper95/mail-server/internal/log"
+	"github.com/phper95/mail-server/internal/tools"
 )
 
 const (
@@ -52,7 +52,7 @@ var stateList = map[int]string{
 }
 
 const (
-	MSG_INIT          = "Welcome to coremail Mail Pop3 Server (imail)"
+	MSG_INIT          = "Welcome to coremail Mail Pop3 Server (mail-server)"
 	MSG_OK            = "core mail"
 	MSG_BAD_SYNTAX    = "500"
 	MSG_LOGIN_OK      = "%d message(s) [%d byte(s)]"

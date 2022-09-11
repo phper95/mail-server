@@ -3,7 +3,7 @@ package utf7_test
 import (
 	"testing"
 
-	"github.com/midoks/imail/internal/tools/utf7"
+	"github.com/phper95/mail-server/internal/tools/utf7"
 )
 
 var decode = []struct {

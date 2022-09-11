@@ -2,12 +2,12 @@ package task
 
 import (
 	"fmt"
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/db"
-	"github.com/midoks/imail/internal/log"
-	"github.com/midoks/imail/internal/smtpd"
-	"github.com/midoks/imail/internal/tools/cron"
-	"github.com/midoks/imail/internal/tools/mail"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/db"
+	"github.com/phper95/mail-server/internal/log"
+	"github.com/phper95/mail-server/internal/smtpd"
+	"github.com/phper95/mail-server/internal/tools/cron"
+	"github.com/phper95/mail-server/internal/tools/mail"
 )
 
 var c = cron.New()

@@ -15,11 +15,11 @@ import (
 	"github.com/go-macaron/session"
 	"gopkg.in/macaron.v1"
 
-	"github.com/midoks/imail/internal/app/form"
-	"github.com/midoks/imail/internal/app/template"
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/db"
-	"github.com/midoks/imail/internal/log"
+	"github.com/phper95/mail-server/internal/app/form"
+	"github.com/phper95/mail-server/internal/app/template"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/db"
+	"github.com/phper95/mail-server/internal/log"
 )
 
 // Context represents context of a request.
@@ -193,6 +193,7 @@ func Contexter() macaron.Handler {
 
 		// Get user from session or header when possible
 		uid := c.Session.Get("uid")
+		fmt.Println("c.Session.Get uid", uid)
 		if uid != nil {
 			u, err := db.UserGetById(uid.(int64))
 			if err == nil {
@@ -202,6 +203,8 @@ func Contexter() macaron.Handler {
 				c.Data["LoggedUserID"] = u.Id
 				c.Data["LoggedUserName"] = u.Name
 				c.Data["IsAdmin"] = u.IsAdmin
+			} else {
+				log.Errorf("UserGetById error %v,uid %d", err, uid)
 			}
 
 			c.User = &u

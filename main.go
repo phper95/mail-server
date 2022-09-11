@@ -2,19 +2,17 @@ package main
 
 import (
 	"embed"
-	"os"
-
+	"github.com/phper95/mail-server/internal/cmd"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/log"
+	"github.com/phper95/mail-server/internal/tools"
+	"github.com/phper95/mail-server/internal/tools/syscall"
 	"github.com/urfave/cli"
-
-	"github.com/midoks/imail/internal/cmd"
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/log"
-	"github.com/midoks/imail/internal/tools"
-	"github.com/midoks/imail/internal/tools/syscall"
+	"os"
 )
 
 const Version = "0.0.14"
-const AppName = "imail"
+const AppName = "mail-server"
 
 //go:embed templates
 var viewsFs embed.FS

@@ -6,7 +6,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/midoks/imail/internal/tools/mail"
+	"github.com/phper95/mail-server/internal/tools/mail"
 	"gorm.io/gorm"
 )
 

@@ -18,9 +18,9 @@ func InitAutoMakeTLSConfig() *tls.Config {
 	max := new(big.Int).Lsh(big.NewInt(1), 128)
 	serialNumber, _ := rand.Int(rand.Reader, max)
 	subject := pkix.Name{
-		Organization:       []string{"IMAIL"},
-		OrganizationalUnit: []string{"IMAIL ORG Unit"},
-		CommonName:         "IMAIL",
+		Organization:       []string{"MAIL-SERVER"},
+		OrganizationalUnit: []string{"MAIL-SERVER ORG Unit"},
+		CommonName:         "MAIL-SERVER",
 	}
 	rootTemplate := x509.Certificate{
 		SerialNumber: serialNumber,

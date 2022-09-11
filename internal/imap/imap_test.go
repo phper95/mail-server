@@ -12,10 +12,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/db"
-	"github.com/midoks/imail/internal/log"
-	"github.com/midoks/imail/internal/tools"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/db"
+	"github.com/phper95/mail-server/internal/log"
+	"github.com/phper95/mail-server/internal/tools"
 )
 
 // go test -v ./internal/go test -v ./internal/imap
@@ -43,11 +43,17 @@ func init() {
 
 }
 
-func initDbSqlite() {
+func initDb() {
 	conf.Log.RootPath = conf.WorkDir() + "/logs"
 	os.MkdirAll(conf.Log.RootPath, os.ModePerm)
-	conf.Database.Type = "sqlite3"
-	conf.Database.Path = "data/imail.db3"
+	//conf.Database.Type = "sqlite3"
+	//conf.Database.Path = "data/imail.db3"
+	conf.Database.Type = "mysql"
+	conf.Database.Host = "127.0.0.1:3306"
+	conf.Database.User = "root"
+	conf.Database.Password = "admin123"
+	conf.Database.Name = "mail"
+	conf.Database.Charset = "utf8mb4"
 
 	conf.Smtp.Debug = false
 
@@ -57,13 +63,13 @@ func initDbSqlite() {
 	// create default user
 	db.CreateUser(&db.User{
 		Name:     "admin",
-		Password: "admin",
+		Password: "admin123",
 		Salt:     "123123",
 		Code:     "admin",
 	})
 
 	d := &db.Domain{
-		Domain:    "cachecha.com",
+		Domain:    "tt.com",
 		Mx:        true,
 		A:         true,
 		Spf:       true,
@@ -180,18 +186,18 @@ func imapCmd(domain string, port string, name string, password string) (bool, er
 }
 
 // func TestRunImap163(t *testing.T) {
-// 	imapCmd("imap.163.com", "143", "midoks@163.com", "mm123123")
+// 	imapCmd("imap.163.com", "143", "phper95@163.com", "mm123123")
 // }
 
 // go test -run TestRunImap
 // go test -v ./internal/imap -bench TestRunImap
 func TestRunImap(t *testing.T) {
-	initDbSqlite()
+	initDb()
 
 	host := "127.0.0.1"
 	port := "10143"
 	name := "admin"
-	password := "admin"
+	password := "admin123"
 
 	addr := fmt.Sprintf("%s:%s", host, port)
 	conn, err := net.Dial("tcp", addr)

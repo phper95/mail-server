@@ -3,10 +3,10 @@ package cmd
 import (
 	"github.com/urfave/cli"
 
-	"github.com/midoks/imail/internal/app"
-	"github.com/midoks/imail/internal/app/router"
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/log"
+	"github.com/phper95/mail-server/internal/app"
+	"github.com/phper95/mail-server/internal/app/router"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/log"
 )
 
 var Service = cli.Command{

@@ -12,9 +12,9 @@ import (
 	"github.com/pkg/errors"
 	"gopkg.in/ini.v1"
 
-	// "github.com/midoks/imail/internal/log"
-	"github.com/midoks/imail/internal/assets/conf"
-	"github.com/midoks/imail/internal/tools"
+	// "github.com/phper95/mail-server/internal/log"
+	"github.com/phper95/mail-server/internal/assets/conf"
+	"github.com/phper95/mail-server/internal/tools"
 )
 
 // Asset is a wrapper for getting conf assets.
@@ -47,7 +47,7 @@ func Init(customConf string) error {
 	File.NameMapper = ini.TitleUnderscore
 
 	if customConf == "" {
-		customConf = filepath.Join(CustomDir(), "conf", "app.conf")
+		customConf = "conf/app.conf"
 	} else {
 		customConf, err = filepath.Abs(customConf)
 		if err != nil {
@@ -173,6 +173,12 @@ func Init(customConf string) error {
 		return errors.Wrap(err, "mapping [i18n] section")
 	}
 
+	if err = File.Section("redis").MapTo(&Cache); err != nil {
+		return errors.Wrap(err, "mapping [cache] section")
+	} else if err = File.Section("other").MapTo(&Other); err != nil {
+		return errors.Wrap(err, "mapping [other] section")
+	}
+
 	if err = File.Section("cache").MapTo(&Cache); err != nil {
 		return errors.Wrap(err, "mapping [cache] section")
 	} else if err = File.Section("other").MapTo(&Other); err != nil {
@@ -180,7 +186,7 @@ func Init(customConf string) error {
 	}
 
 	// Check run user when the install is locked.
-	if Security.InstallLock {
+	if tools.IsFile("./install.lock") {
 		currentUser, match := CheckRunUser(App.RunUser)
 		if !match {
 			return fmt.Errorf("user configured to run imail is %q, but the current user is %q", App.RunUser, currentUser)

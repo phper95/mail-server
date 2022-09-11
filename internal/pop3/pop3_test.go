@@ -11,10 +11,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/db"
-	"github.com/midoks/imail/internal/log"
-	"github.com/midoks/imail/internal/tools"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/db"
+	"github.com/phper95/mail-server/internal/log"
+	"github.com/phper95/mail-server/internal/tools"
 )
 
 // go test -v ./internal/pop3
@@ -42,28 +42,34 @@ func init() {
 
 }
 
-func initDbSqlite() {
+func initDb() {
 	conf.Log.RootPath = conf.WorkDir() + "/logs"
 	os.MkdirAll(conf.Log.RootPath, os.ModePerm)
-	conf.Database.Type = "sqlite3"
-	conf.Database.Path = "data/imail.db3"
+	conf.Database.Type = "mysql"
+	conf.Database.User = "root"
+	conf.Database.Host = "127.0.0.1:3306"
+	conf.Database.Password = "admin123"
+	conf.Database.Name = "mail"
+	conf.Database.Charset = "utf8mb4"
+	//conf.Database.Type = "sqlite3"
+	//conf.Database.Path = "data/imail.db3"
 
 	conf.Smtp.Debug = false
 
-	fmt.Println(conf.Database.Path)
+	fmt.Println(conf.Database.Host)
 	log.Init()
 	db.Init()
 
 	// create default user
 	db.CreateUser(&db.User{
 		Name:     "admin",
-		Password: "admin",
+		Password: "admin123",
 		Salt:     "123123",
 		Code:     "admin",
 	})
 
 	d := &db.Domain{
-		Domain:    "cachecha.com",
+		Domain:    "tt.com",
 		Mx:        true,
 		A:         true,
 		Spf:       true,
@@ -181,9 +187,9 @@ func PopCmd(domain string, port string, name string, password string) (bool, err
 
 // go test -v ./internal/pop3 -test.run TestRunLocalPop3
 func TestRunLocalPop3(t *testing.T) {
-	initDbSqlite()
+	initDb()
 
-	_, err := PopCmd("127.0.0.1", "10110", "admin", "admin")
+	_, err := PopCmd("127.0.0.1", "10110", "admin", "admin123")
 	if err != nil {
 		t.Error("TestRunLocalPop3 fail:" + err.Error())
 	} else {

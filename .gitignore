@@ -10,7 +10,7 @@
 
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
-imail
+mail-server
 lib/.DS_Store
 .DS_Store
 .idea
@@ -18,7 +18,7 @@ vendor
 vendor_bak
 conf/dkim/*
 tmp
-logs
+logs/*
 data
 internal/app/logs
 *.db3
@@ -31,3 +31,4 @@ internal/imap/index.html
 internal/pop3/index.html
 internal/smtpd/index.html
 custom
+install.lock

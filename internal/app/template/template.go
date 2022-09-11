@@ -16,7 +16,7 @@ import (
 
 	"github.com/editorconfig/editorconfig-core-go/v2"
 	"github.com/microcosm-cc/bluemonday"
-	"github.com/midoks/imail/internal/conf"
+	"github.com/phper95/mail-server/internal/conf"
 	"github.com/unknwon/i18n"
 )
 

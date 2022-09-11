@@ -20,7 +20,7 @@
 						<dt>{{.i18n.Tr "admin.dashboard.build_commit"}}</dt>
 						<dd>
 							{{if .BuildCommit}}
-								<a target="_blank" href="https://github.com/midoks/imail/commit/{{.BuildCommit}}">{{.BuildCommit}} <i class="fa fa-external-link" aria-hidden="true"></i></a>
+								<a target="_blank" href="https://github.com/phper95/mail-server/commit/{{.BuildCommit}}">{{.BuildCommit}} <i class="fa fa-external-link" aria-hidden="true"></i></a>
 							{{else}}N/A{{end}}
 						</dd>
 					</dl>
@@ -55,7 +55,7 @@
 						<dd>{{.SysStatus.MemMallocs}}</dd>
 						<dt>{{.i18n.Tr "admin.dashboard.memory_free_times"}}</dt>
 						<dd>{{.SysStatus.MemFrees}}</dd>
-						
+
 						<div class="ui divider"></div>
 
 						<dt>{{.i18n.Tr "admin.dashboard.current_heap_usage"}}</dt>

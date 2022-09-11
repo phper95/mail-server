@@ -12,11 +12,11 @@ import (
 	"strings"
 	"time"
 
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/db"
-	"github.com/midoks/imail/internal/log"
-	"github.com/midoks/imail/internal/tools"
-	"github.com/midoks/imail/internal/tools/mail"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/db"
+	"github.com/phper95/mail-server/internal/log"
+	"github.com/phper95/mail-server/internal/tools"
+	"github.com/phper95/mail-server/internal/tools/mail"
 )
 
 const (
@@ -88,7 +88,7 @@ const (
 )
 
 var msgList = map[string]string{
-	MSG_INIT:            "cachecha.com Anti-spam GT for Coremail System (imail[20210626])",
+	MSG_INIT:            "tt.com Anti-spam GT for Coremail System (mail-server[20210626])",
 	MSG_OK:              "ok",
 	MSG_BYE:             "bye",
 	MSG_COMMAND_HE_ERR:  "Error: send HELO/EHLO first",

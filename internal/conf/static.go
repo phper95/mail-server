@@ -19,7 +19,7 @@ var (
 
 var (
 	App struct {
-		// ⚠️ WARNING: Should only be set by the main package (i.e. "imail.go").
+		// ⚠️ WARNING: Should only be set by the main package (i.e. "main.go").
 		Version string `ini:"-"`
 
 		Name      string
@@ -34,6 +34,13 @@ var (
 	Log struct {
 		Format   string
 		RootPath string
+	}
+
+	// Cache settings
+	Redis struct {
+		Address  string
+		Password string
+		Db       string
 	}
 
 	// Cache settings
@@ -148,7 +155,6 @@ var (
 
 	// Security settings
 	Security struct {
-		InstallLock             bool
 		SecretKey               string
 		LoginRememberDays       int
 		CookieRememberName      string

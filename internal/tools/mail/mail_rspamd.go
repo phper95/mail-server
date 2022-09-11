@@ -5,8 +5,8 @@ import (
 	"context"
 	"errors"
 	// "fmt"
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/rspamd"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/rspamd"
 	"strings"
 )
 

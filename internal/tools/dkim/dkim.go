@@ -12,7 +12,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/midoks/imail/internal/tools"
+	"github.com/phper95/mail-server/internal/tools"
 )
 
 func makeRsa() ([]byte, []byte, error) {

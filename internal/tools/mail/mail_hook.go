@@ -3,8 +3,8 @@ package mail
 import (
 	"errors"
 	"fmt"
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/tools"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/tools"
 	"os/exec"
 )
 

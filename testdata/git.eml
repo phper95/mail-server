@@ -44,7 +44,7 @@ Content-Type: multipart/alternative;
 Content-Transfer-Encoding: 7bit
 Precedence: list
 X-GitHub-Sender: sebma
-X-GitHub-Recipient: midoks
+X-GitHub-Recipient: phper95
 X-GitHub-Reason: subscribed
 List-ID: mpv-player/mpv <mpv.mpv-player.github.com>
 List-Archive: https://github.com/mpv-player/mpv
@@ -61,7 +61,7 @@ Content-Type: text/plain;
 Content-Transfer-Encoding: 7bit
 
 Hi,
-I'm trying to play a stream from ok.ru/video and mpv has buffer underruns much too often : 
+I'm trying to play a stream from ok.ru/video and mpv has buffer underruns much too often :
 ```bash
 $ mpv --no-config --user-agent="$userAgent" --no-ytdl --cache --cache-secs=600 $(yt-dlp --ignore-config -gf mpd-2 https://ok.ru/video/1896758512300)
  (+) Video --vid=1 (*) (h264 622x360 24.300fps)
@@ -113,7 +113,7 @@ It seems as if the `--cache-secs=600` argument has no effect because without it 
 W.I.P....
 
 
--- 
+--
 Reply to this email directly or view it on GitHub:
 https://github.com/mpv-player/mpv/issues/9663
 You are receiving this because you are subscribed to this thread.

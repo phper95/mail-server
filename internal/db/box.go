@@ -2,7 +2,7 @@ package db
 
 import (
 	"fmt"
-	_ "github.com/midoks/imail/internal/tools"
+	_ "github.com/phper95/mail-server/internal/tools"
 	// "gorm.io/gorm"
 	"strings"
 	// "errors"

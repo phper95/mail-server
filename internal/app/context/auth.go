@@ -2,10 +2,10 @@ package context
 
 import (
 	"fmt"
-	"net/url"
-
-	"github.com/midoks/imail/internal/conf"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/tools"
 	"gopkg.in/macaron.v1"
+	"net/url"
 )
 
 type ToggleOptions struct {
@@ -18,8 +18,7 @@ type ToggleOptions struct {
 func Toggle(options *ToggleOptions) macaron.Handler {
 
 	return func(c *Context) {
-		if !conf.Security.InstallLock {
-
+		if !tools.IsFile("./install.lock") {
 			fmt.Println("Toggle:not install")
 			c.RedirectSubpath("/install")
 			return

@@ -11,17 +11,17 @@ import (
 	"gopkg.in/ini.v1"
 	"gopkg.in/macaron.v1"
 
-	"github.com/midoks/imail/internal/app/context"
-	"github.com/midoks/imail/internal/app/form"
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/db"
-	"github.com/midoks/imail/internal/imap"
-	"github.com/midoks/imail/internal/log"
-	"github.com/midoks/imail/internal/pop3"
-	"github.com/midoks/imail/internal/smtpd"
-	"github.com/midoks/imail/internal/task"
-	"github.com/midoks/imail/internal/tools"
-	"github.com/midoks/imail/internal/tools/debug"
+	"github.com/phper95/mail-server/internal/app/context"
+	"github.com/phper95/mail-server/internal/app/form"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/db"
+	"github.com/phper95/mail-server/internal/imap"
+	"github.com/phper95/mail-server/internal/log"
+	"github.com/phper95/mail-server/internal/pop3"
+	"github.com/phper95/mail-server/internal/smtpd"
+	"github.com/phper95/mail-server/internal/task"
+	"github.com/phper95/mail-server/internal/tools"
+	"github.com/phper95/mail-server/internal/tools/debug"
 )
 
 const (
@@ -84,7 +84,7 @@ func GlobalInit(customConf string) error {
 		go debug.Pprof()
 	}
 
-	if conf.Security.InstallLock {
+	if tools.IsFile("./install.lock") {
 
 		db.Init()
 		task.Init()
@@ -96,7 +96,7 @@ func GlobalInit(customConf string) error {
 	}
 
 	checkRunMode()
-	if !conf.Security.InstallLock {
+	if !tools.IsFile("./install.lock") {
 		return nil
 	}
 
@@ -104,7 +104,7 @@ func GlobalInit(customConf string) error {
 }
 
 func InstallInit(c *context.Context) {
-	if conf.Security.InstallLock {
+	if tools.IsFile("./install.lock") {
 		c.NotFound()
 		return
 	}
@@ -196,7 +196,7 @@ func InstallPost(c *context.Context, f form.Install) {
 	// if err := db.NewTestEngine(); err != nil {
 	// 	if strings.Contains(err.Error(), `Unknown database type: sqlite3`) {
 	// 		c.FormErr("DbType")
-	// 		c.RenderWithErr(c.Tr("install.sqlite3_not_available", "https://github.com/midoks/imail/wiki"), INSTALL, &f)
+	// 		c.RenderWithErr(c.Tr("install.sqlite3_not_available", "https://github.com/phper95/mail-server/wiki"), INSTALL, &f)
 	// 	} else {
 	// 		c.FormErr("DbSetting")
 	// 		c.RenderWithErr(c.Tr("install.invalid_db_setting", err), INSTALL, &f)
@@ -246,7 +246,7 @@ func InstallPost(c *context.Context, f form.Install) {
 		}
 	}
 
-	cfg.Section("").Key("app_name").SetValue("imail")
+	cfg.Section("").Key("app_name").SetValue("mail-server")
 	cfg.Section("").Key("brand_name").SetValue(f.AppName)
 	cfg.Section("").Key("run_user").SetValue(f.RunUser)
 	cfg.Section("").Key("run_mode").SetValue("prod")
@@ -309,6 +309,14 @@ func InstallPost(c *context.Context, f form.Install) {
 	if err := db.CreateUser(u); err != nil {
 		c.FormErr("AdminName", "AdminEmail")
 		c.RenderWithErr(c.Tr("install.invalid_admin_setting", err), INSTALL, &f)
+		return
+	}
+
+	//install lock
+	err := tools.WriteFile("./install.lock", "")
+	if err != nil {
+		log.Errorf("create install lock file error %v", err)
+		c.RenderWithErr(c.Tr("install.init_failed", err), INSTALL, &f)
 		return
 	}
 

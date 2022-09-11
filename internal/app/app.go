@@ -8,21 +8,22 @@ import (
 
 	"github.com/go-macaron/binding"
 	"github.com/go-macaron/cache"
+	_ "github.com/go-macaron/cache/redis"
 	"github.com/go-macaron/captcha"
 	"github.com/go-macaron/csrf"
 	"github.com/go-macaron/gzip"
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/session"
-
-	"github.com/midoks/imail/internal/app/context"
-	"github.com/midoks/imail/internal/app/form"
-	"github.com/midoks/imail/internal/app/router"
-	"github.com/midoks/imail/internal/app/router/admin"
-	"github.com/midoks/imail/internal/app/router/mail"
-	"github.com/midoks/imail/internal/app/router/user"
-	"github.com/midoks/imail/internal/app/template"
-	"github.com/midoks/imail/internal/assets/templates"
-	"github.com/midoks/imail/internal/conf"
+	_ "github.com/go-macaron/session/redis"
+	"github.com/phper95/mail-server/internal/app/context"
+	"github.com/phper95/mail-server/internal/app/form"
+	"github.com/phper95/mail-server/internal/app/router"
+	"github.com/phper95/mail-server/internal/app/router/admin"
+	"github.com/phper95/mail-server/internal/app/router/mail"
+	"github.com/phper95/mail-server/internal/app/router/user"
+	"github.com/phper95/mail-server/internal/app/template"
+	"github.com/phper95/mail-server/internal/assets/templates"
+	"github.com/phper95/mail-server/internal/conf"
 )
 
 func newMacaron() *macaron.Macaron {
@@ -235,7 +236,7 @@ func setRouter(m *macaron.Macaron) *macaron.Macaron {
 		CookiePath:     conf.Web.Subpath,
 		Gclifetime:     conf.Session.GCInterval,
 		Maxlifetime:    conf.Session.MaxLifeTime,
-		Secure:         conf.Session.CookieSecure,
+		Secure:         conf.Web.URL.Scheme == "https",
 	}), csrf.Csrfer(csrf.Options{
 		Secret:         conf.Security.SecretKey,
 		Header:         "X-CSRF-Token",

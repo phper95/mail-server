@@ -10,9 +10,9 @@ check_go_environment() {
 load_vars() {
 	OS=$(uname | tr '[:upper:]' '[:lower:]')
 
-	VERSION=$(get_latest_release "midoks/imail")
+	VERSION=$(get_latest_release "phper95/mail-server")
 
-	TARGET_DIR="/usr/local/imail"
+	TARGET_DIR="/usr/local/mail-server"
 }
 
 get_latest_release() {
@@ -31,7 +31,7 @@ func main() { fmt.Println(runtime.GOARCH) }" > /tmp/go_arch.go
 }
 
 get_download_url() {
-	DOWNLOAD_URL="https://github.com/midoks/imail/releases/download/$VERSION/imail_${VERSION}_${OS}_${ARCH}.tar.gz"
+	DOWNLOAD_URL="https://github.com/phper95/mail-server/releases/download/$VERSION/mail-server_${VERSION}_${OS}_${ARCH}.tar.gz"
 }
 
 # download file
@@ -53,7 +53,7 @@ download_file() {
     if [ "${code}" != 200 ]; then
         printf "\e[1;31mRequest failed with code %s\e[0m\n" $code
         exit 1
-    else 
+    else
 	    printf "\n\e[1;33mDownload succeeded\e[0m\n"
     fi
 }
@@ -82,9 +82,9 @@ main() {
 	bash make.sh
 
 	systemctl daemon-reload
-	service imail restart
+	service mail-server restart
 
-	cd .. && ./imail -v	
+	cd .. && ./mail-server -v
 	popd >/dev/null 2>&1
 }
 

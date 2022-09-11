@@ -8,13 +8,13 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/midoks/imail/internal/app/context"
-	"github.com/midoks/imail/internal/app/form"
-	"github.com/midoks/imail/internal/db"
-	"github.com/midoks/imail/internal/tools"
-	tmail "github.com/midoks/imail/internal/tools/mail"
-	"github.com/midoks/imail/internal/tools/paginater"
 	"github.com/midoks/mcopa"
+	"github.com/phper95/mail-server/internal/app/context"
+	"github.com/phper95/mail-server/internal/app/form"
+	"github.com/phper95/mail-server/internal/db"
+	"github.com/phper95/mail-server/internal/tools"
+	tmail "github.com/phper95/mail-server/internal/tools/mail"
+	"github.com/phper95/mail-server/internal/tools/paginater"
 )
 
 const (

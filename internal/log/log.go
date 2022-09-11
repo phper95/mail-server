@@ -4,12 +4,12 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/midoks/imail/internal/conf"
 	go_logger "github.com/phachon/go-logger"
+	"github.com/phper95/mail-server/internal/conf"
 )
 
 var (
-	logFileName = "imail.log"
+	logFileName = "mail-server.log"
 	logger      *go_logger.Logger
 )
 

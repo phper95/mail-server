@@ -1,6 +1,6 @@
 #!/bin/bash
 # chkconfig: 2345 55 25
-# description: Imail Service
+# description: mail-server Service
 
 ### BEGIN INIT INFO
 # Provides:          bt
@@ -8,8 +8,8 @@
 # Required-Stop:     $all
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Short-Description: starts Imail
-# Description:       starts the Imail
+# Short-Description: starts mail-server
+# Description:       starts the mail-server
 ### END INIT INFO
 
 PATH=/bin:/sbin:/usr/bin:/usr/sbin:/usr/local/bin:/usr/local/sbin:~/bin
@@ -24,13 +24,13 @@ if [ -f /etc/rc.d/init.d/functions ];then
 fi
 
 app_path={APP_PATH}
-SERVICENAME="imail"
+SERVICENAME="mail-server"
 
 im_start(){
-    isStart=`ps -ef|grep 'imail service' |grep -v grep|awk '{print $2}'`
+    isStart=`ps -ef|grep 'mail-server service' |grep -v grep|awk '{print $2}'`
     if [ "$isStart" == '' ];then
-        echo -e "Starting imail... \c"
-        cd $app_path && daemon "${app_path}/imail service &"
+        echo -e "Starting mail-server... \c"
+        cd $app_path && daemon "${app_path}/mail-server service &"
         isStart=""
         while [[ "$isStart" == "" ]];
         do
@@ -57,7 +57,7 @@ im_start(){
 }
 
 im_stop(){
-	pids=`ps -ef|grep 'imail service' |grep -v grep|awk '{print $2}'`
+	pids=`ps -ef|grep 'mail-server service' |grep -v grep|awk '{print $2}'`
     arr=($pids)
     echo -e "Stopping ${SERVICENAME}... \c"
     for p in ${arr[@]}
@@ -68,7 +68,7 @@ im_stop(){
 }
 
 im_status(){
-    isStart=`ps -ef|grep 'imail service' |grep -v grep|awk '{print $2}'`
+    isStart=`ps -ef|grep 'mail-server service' |grep -v grep|awk '{print $2}'`
     if [ "$isStart" == '' ];then
       echo -e "${SERVICENAME} not running"
     else
@@ -80,10 +80,10 @@ case "$1" in
     'start') im_start;;
     'stop') im_stop;;
     'status') im_status;;
-    'reload') 
+    'reload')
         im_stop
         im_start;;
-    'restart') 
+    'restart')
         im_stop
         im_start;;
 esac

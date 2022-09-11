@@ -10,10 +10,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/db"
-	"github.com/midoks/imail/internal/log"
-	"github.com/midoks/imail/internal/tools"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/db"
+	"github.com/phper95/mail-server/internal/log"
+	"github.com/phper95/mail-server/internal/tools"
 )
 
 var localhostCert = []byte(`-----BEGIN CERTIFICATE-----
@@ -125,12 +125,17 @@ func T_init() {
 	}
 }
 
-func initDbSqlite() {
+func initDb() {
 	conf.Log.RootPath = conf.WorkDir() + "/logs"
 	os.MkdirAll(conf.Log.RootPath, os.ModePerm)
-	conf.Database.Type = "sqlite3"
-	conf.Database.Path = "data/imail.db3"
-
+	//conf.Database.Type = "sqlite3"
+	//conf.Database.Path = "data/imail.db3"
+	conf.Database.Type = "mysql"
+	conf.Database.Host = "127.0.0.1:3306"
+	conf.Database.User = "root"
+	conf.Database.Password = "admin123"
+	conf.Database.Name = "mail"
+	conf.Database.Charset = "utf8mb4"
 	conf.Smtp.Debug = false
 
 	log.Init()
@@ -145,7 +150,7 @@ func initDbSqlite() {
 	})
 
 	d := &db.Domain{
-		Domain:    "cachecha.com",
+		Domain:    "tt.com",
 		Mx:        true,
 		A:         true,
 		Spf:       true,
@@ -170,7 +175,7 @@ func initDbMysql() {
 	conf.Database.User = "root"
 	conf.Database.Password = "root"
 	conf.Database.Host = "127.0.0.1:3356"
-	conf.Database.Name = "imail"
+	conf.Database.Name = "mail"
 
 	conf.Smtp.Debug = false
 
@@ -180,13 +185,13 @@ func initDbMysql() {
 	// create default user
 	db.CreateUser(&db.User{
 		Name:     "admin",
-		Password: "admin",
+		Password: "admin123",
 		Salt:     "123123",
 		Code:     "admin",
 	})
 
 	d := &db.Domain{
-		Domain:    "cachecha.com",
+		Domain:    "tt.com",
 		Mx:        true,
 		A:         true,
 		Spf:       true,
@@ -279,15 +284,15 @@ func SendMailTest(addr string, a Auth, from string, to []string, msg []byte) err
 }
 
 // go test -v ./internal/smtpd -run TestSendMailLocal
-func T_TestSendMailLocal(t *testing.T) {
-	initDbSqlite()
+func TestSendMailLocal(t *testing.T) {
+	initDb()
 
 	now := time.Now().Format("2006-01-02 15:04:05")
 
-	tEmail := "midoks@163.com"
-	fEmail := "admin@cachecha.com"
+	tEmail := "2550702985@qq.com"
+	fEmail := "admin@tt.com"
 
-	content := fmt.Sprintf("From: <%s>\r\nSubject: Hello imail[%s]\r\nTo: <%s>\r\n\r\nHi! yes is test. imail ok?", fEmail, now, tEmail)
+	content := fmt.Sprintf("From: <%s>\r\nSubject: Hello mail-server[%s]\r\nTo: <%s>\r\n\r\nHi! yes is test. mail-server ok?", fEmail, now, tEmail)
 	auth := PlainAuth("", fEmail, "admin", "127.0.0.1")
 	err := SendMailTest("127.0.0.1:1025", auth, fEmail, []string{tEmail}, []byte(content))
 	if err != nil {
@@ -299,14 +304,14 @@ func T_TestSendMailLocal(t *testing.T) {
 
 // go test -v ./internal/smtpd -run TestSendMail
 func SSL_TestSendMail(t *testing.T) {
-	initDbSqlite()
+	initDb()
 
 	now := time.Now().Format("2006-01-02 15:04:05")
 
-	tEmail := "midoks@163.com"
-	fEmail := "admin@cachecha.com"
+	tEmail := "phper95@163.com"
+	fEmail := "admin@tt.com"
 
-	content := fmt.Sprintf("From: <%s>\r\nSubject: Hello imail[%s]\r\nTo: <%s>\r\n\r\nHi! yes is test. imail ok?", fEmail, now, tEmail)
+	content := fmt.Sprintf("From: <%s>\r\nSubject: Hello mail-server[%s]\r\nTo: <%s>\r\n\r\nHi! yes is test. mail-server ok?", fEmail, now, tEmail)
 	auth := smtp.PlainAuth("", fEmail, "admin", "127.0.0.1")
 	err := smtp.SendMail("127.0.0.1:1025", auth, fEmail, []string{tEmail}, []byte(content))
 	if err != nil {
@@ -318,10 +323,10 @@ func SSL_TestSendMail(t *testing.T) {
 
 func ReceivedMail() error {
 	now := time.Now().Format("2006-01-02 15:04:05")
-	fromEmail := "midoks@163.com"
-	toEmail := "admin@cachecha.com"
+	fromEmail := "phper95@163.com"
+	toEmail := "admin@tt.com"
 
-	send := "From: =?UTF-8?B?6Zi/6YeM5LqR?= <%s>\r\nSubject: Hello imail[%s]\r\nTo: <%s>\r\n\r\nHi! yes is test. imail ok?"
+	send := "From: =?UTF-8?B?6Zi/6YeM5LqR?= <%s>\r\nSubject: Hello mail-server[%s]\r\nTo: <%s>\r\n\r\nHi! yes is test. mail-server ok?"
 	content := fmt.Sprintf(send, fromEmail, now, toEmail)
 
 	err := Delivery("127.0.0.1:1025", fromEmail, toEmail, []byte(content))
@@ -331,7 +336,7 @@ func ReceivedMail() error {
 
 // go test -v ./internal/smtpd -run TestReceivedMail
 func T_TestReceivedMail(t *testing.T) {
-	initDbSqlite()
+	initDb()
 	err := ReceivedMail()
 	if err != nil {
 		t.Error("TestReceivedMail fail:" + err.Error())
@@ -342,20 +347,20 @@ func T_TestReceivedMail(t *testing.T) {
 
 func MailDbPush() (int64, error) {
 	revContent := `Received: from 127.0.0.1 (unknown[127.0.0.1])
-	by smtp.cachecha.com (NewMx) with SMTP id
-	for <midoks@163.com>; Tue, 28 Sep 2021 13:30:26 +0800 (CST) 
-From: <midoks@163.com>
-Subject: Hello imail[2021-09-28 13:30:26]
-To: <admin@cachecha.com>
+	by smtp.tt.com (NewMx) with SMTP id
+	for <phper95@163.com>; Tue, 28 Sep 2021 13:30:26 +0800 (CST) 
+From: <phper95@163.com>
+Subject: Hello mail-server[2021-09-28 13:30:26]
+To: <admin@tt.com>
 
-Hi! yes is test. imail ok?`
-	fid, err := db.MailPush(1, 1, "midoks@163.com", "admin@cachecha.com", revContent, 3, false)
+Hi! yes is test. mail-server ok?`
+	fid, err := db.MailPush(1, 1, "phper95@163.com", "admin@tt.com", revContent, 3, false)
 	return fid, err
 }
 
 // go test -v ./internal/smtpd -run TestMailDbPush
 func T_TestMailDbPush(t *testing.T) {
-	initDbSqlite()
+	initDb()
 	conf.Web.MailSaveMode = "db"
 	_, err := MailDbPush()
 	if err != nil {
@@ -378,8 +383,8 @@ func HandlerTestMailDbPushMySQL(t *testing.T) {
 }
 
 // go test -v ./internal/smtpd -run TestMailDbPushHardDisk
-func T_TestMailDbPushHardDisk(t *testing.T) {
-	initDbSqlite()
+func TestMailDbPushHardDisk(t *testing.T) {
+	initDb()
 	conf.Web.MailSaveMode = "hard_disk"
 	_, err := MailDbPush()
 	if err != nil {

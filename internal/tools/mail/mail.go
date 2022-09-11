@@ -7,15 +7,17 @@ import (
 	"strings"
 	"time"
 
-	"github.com/midoks/imail/internal/conf"
-	"github.com/midoks/imail/internal/tools"
+	"github.com/phper95/mail-server/internal/conf"
+	"github.com/phper95/mail-server/internal/tools"
 )
 
 func GetMailSubject(content string) string {
 	var err error
 	valid := regexp.MustCompile(`Subject: (.*)`)
 	match := valid.FindAllStringSubmatch(content, -1)
-
+	if len(match) == 0 || len(match[0]) > 0 {
+		return ""
+	}
 	val := match[0][0]
 	tmp := strings.SplitN(val, ":", 2)
 	val = strings.TrimSpace(tmp[1])
@@ -49,7 +51,9 @@ func GetMailFromInContent(content string) string {
 	var err error
 	valid := regexp.MustCompile(`From: (.*)`)
 	match := valid.FindAllStringSubmatch(content, -1)
-
+	if len(match) == 0 || len(match[0]) == 0 {
+		return ""
+	}
 	val := match[0][0]
 	tmp := strings.SplitN(val, ":", 2)
 	val = strings.TrimSpace(tmp[1])
@@ -85,7 +89,7 @@ func GetMailSend(from string, to string, subject string, msg string) (string, er
 	}
 
 	sendTime := time.Now().Format("Mon, 02 Jan 2006 15:04:05 -0700 (MST)")
-	sendVersion := fmt.Sprintf("imail/%s", conf.App.Version)
+	sendVersion := fmt.Sprintf("mail-server/%s", conf.App.Version)
 	boundaryRand := tools.RandString(20)
 
 	content := strings.Replace(string(data), "{MAIL_FROM}", from, -1)
@@ -104,7 +108,7 @@ func GetMailReturnToSender(mailFrom, rcptTo string, err_to_mail string, err_cont
 	sendSubject := GetMailSubject(err_content)
 
 	sendTime := time.Now().Format("Mon, 02 Jan 2006 15:04:05 -0700 (MST)")
-	sendVersion := fmt.Sprintf("imail/%s", conf.App.Version)
+	sendVersion := fmt.Sprintf("mail-server/%s", conf.App.Version)
 	boundaryRand := tools.RandString(20)
 
 	data, err := ioutil.ReadFile(conf.WorkDir() + "/conf/tpl/return_to_sender.tpl")

@@ -11,7 +11,7 @@ VERSION=0.0.14
 curPath=`pwd`
 rootPath=$(dirname "$curPath")
 
-PACK_NAME=imail
+PACK_NAME=mail-server
 
 # go tool dist list
 mkdir -p $rootPath/tmp/build
@@ -20,27 +20,27 @@ mkdir -p $rootPath/tmp/package
 source ~/.bash_profile
 
 cd $rootPath
-LDFLAGS="-X \"github.com/midoks/imail/internal/conf.BuildTime=$(date -u '+%Y-%m-%d %I:%M:%S %Z')\""
-LDFLAGS="${LDFLAGS} -X \"github.com/midoks/imail/internal/conf.BuildCommit=$(git rev-parse HEAD)\""
+LDFLAGS="-X \"github.com/phper95/mail-server/internal/conf.BuildTime=$(date -u '+%Y-%m-%d %I:%M:%S %Z')\""
+LDFLAGS="${LDFLAGS} -X \"github.com/phper95/mail-server/internal/conf.BuildCommit=$(git rev-parse HEAD)\""
 
 
 echo $LDFLAGS
 build_app(){
 
-	if [ -f $rootPath/tmp/build/imail ]; then
-		rm -rf $rootPath/tmp/build/imail
-		rm -rf $rootPath/imail
+	if [ -f $rootPath/tmp/build/mail-server ]; then
+		rm -rf $rootPath/tmp/build/mail-server
+		rm -rf $rootPath/mail-server
 	fi
 
-	if [ -f $rootPath/tmp/build/imail.exe ]; then
-		rm -rf $rootPath/tmp/build/imail.exe
-		rm -rf $rootPath/imail.exe
+	if [ -f $rootPath/tmp/build/mail-server.exe ]; then
+		rm -rf $rootPath/tmp/build/mail-server.exe
+		rm -rf $rootPath/mail-server.exe
 	fi
 
 	echo "build_app" $1 $2
 
 	echo "export CGO_ENABLED=1 GOOS=$1 GOARCH=$2"
-	echo "cd $rootPath && go build imail.go"
+	echo "cd $rootPath && go build main.go"
 
 	# export CGO_ENABLED=1 GOOS=linux GOARCH=amd64
 
@@ -59,7 +59,7 @@ build_app(){
 
 
 	if [ $1 == "windows" ];then
-		
+
 		if [ $2 == "amd64" ]; then
 			export CC=x86_64-w64-mingw32-gcc
 			export CXX=x86_64-w64-mingw32-g++
@@ -68,10 +68,10 @@ build_app(){
 			export CXX=i686-w64-mingw32-g++
 		fi
 
-		cd $rootPath && go build -o imail.exe -ldflags "${LDFLAGS}" imail.go
+		cd $rootPath && go build -o mail-server.exe -ldflags "${LDFLAGS}" main.go
 
 		# -ldflags="-s -w"
-		# cd $rootPath && go build imail.go && /usr/local/bin/strip imail
+		# cd $rootPath && go build main.go && /usr/local/bin/strip mail-server
 	fi
 
 	if [ $1 == "linux" ]; then
@@ -93,16 +93,16 @@ build_app(){
 			export CC=arm-linux-musleabi-gcc
 		fi
 
-		cd $rootPath && go build -ldflags "${LDFLAGS}"  imail.go 
+		cd $rootPath && go build -ldflags "${LDFLAGS}"  main.go
 	fi
 
 	if [ $1 == "darwin" ]; then
 		echo "cd $rootPath && go build -v -ldflags '${LDFLAGS}'"
 		cd $rootPath && go build -v -ldflags "${LDFLAGS}"
-		
-		cp $rootPath/imail $rootPath/tmp/build
+
+		cp $rootPath/mail-server $rootPath/tmp/build
 	fi
-	
+
 
 	cp -r $rootPath/scripts $rootPath/tmp/build
 	cp -r $rootPath/LICENSE $rootPath/tmp/build
@@ -112,9 +112,9 @@ build_app(){
 
 
 	if [ $1 == "windows" ];then
-		cp $rootPath/imail.exe $rootPath/tmp/build
+		cp $rootPath/mail-server.exe $rootPath/tmp/build
 	else
-		cp $rootPath/imail $rootPath/tmp/build
+		cp $rootPath/mail-server $rootPath/tmp/build
 	fi
 
 	# zip
