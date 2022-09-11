@@ -191,6 +191,15 @@ type DatabaseOpts struct {
 // Database settings
 var Database DatabaseOpts
 
+type ESOpts struct {
+	Host     string
+	User     string
+	Password string
+}
+
+// ES settings
+var ES ESOpts
+
 type i18nConf struct {
 	Langs     []string          `delim:","`
 	Names     []string          `delim:","`

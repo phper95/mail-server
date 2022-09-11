@@ -429,3 +429,7 @@ func B_BenchmarkMailDbPush(b *testing.B) {
 	}
 	b.StopTimer()
 }
+
+func TestLen(t *testing.T) {
+	fmt.Println(len(dict))
+}

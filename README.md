@@ -16,13 +16,39 @@ mail-server项目旨在打造一个以最简便的方式搭建简单、稳定的
 - Rspamd垃圾邮件过滤支持。
 - Hook脚本支持。
 
+## 环境要求
+- go >= 1.15
+- MySQL >= 5.7
+- redis >=4.0.0
+- elasticsearch >= 7.0
+
+## 环境配置
+```shell
+设置GOPROXY和GOPRIVATE
+GOPROXY=https://goproxy.cn;GOPRIVATE=*gitee.com
+```
+## 启动方式
+```shell
+ go run main.go service
+```
+也可以打包后运行，在项目根目录执行
+```shell
+go build
+```
+会在项目根目录生成编译好的可执行文件mail-server.exe
+运行该文件即可
+```shell
+./mail-server.exe service
+```
+[![运行截图](./screenshot/运行截图.png)](/screenshot/运行截图.png)
+
 [![Go](https://github.com/phper95/mail-server/actions/workflows/go.yml/badge.svg)](https://github.com/phper95/mail-server/actions/workflows/go.yml)
 [![CodeQL](https://github.com/phper95/mail-server/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/phper95/mail-server/actions/workflows/codeql-analysis.yml)
 [![Codecov](https://codecov.io/gh/phper95/mail-server/branch/master/graph/badge.svg?token=MJ2HL6HFLR)](https://codecov.io/gh/phper95/mail-server)
 
 ## 版本截图
 
-[![main](/screenshot/main.png)](/screenshot/main.png)
+[![main](./screenshot/main.png)](/screenshot/main.png)
 
 
 

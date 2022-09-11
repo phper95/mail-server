@@ -14,7 +14,6 @@ import (
 	"github.com/go-macaron/gzip"
 	"github.com/go-macaron/i18n"
 	"github.com/go-macaron/session"
-	_ "github.com/go-macaron/session/redis"
 	"github.com/phper95/mail-server/internal/app/context"
 	"github.com/phper95/mail-server/internal/app/form"
 	"github.com/phper95/mail-server/internal/app/router"

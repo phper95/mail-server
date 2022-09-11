@@ -3,6 +3,7 @@ module github.com/phper95/mail-server
 go 1.16
 
 require (
+	gitee.com/phper95/pkg/es v0.0.0-20220814230036-38ccc10b9934
 	github.com/axgle/mahonia v0.0.0-20180208002826-3358181d7394
 	github.com/editorconfig/editorconfig-core-go/v2 v2.4.5
 	github.com/go-macaron/binding v1.2.0

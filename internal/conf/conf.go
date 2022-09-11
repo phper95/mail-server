@@ -79,7 +79,14 @@ func Init(customConf string) error {
 	// ----- Database settings -----
 	// ***************************
 	if err = File.Section("database").MapTo(&Database); err != nil {
-		return errors.Wrap(err, "mapping [log] section")
+		return errors.Wrap(err, "mapping [database] section")
+	}
+
+	// ***************************
+	// ----- ES settings -----
+	// ***************************
+	if err = File.Section("elasticsearch").MapTo(&ES); err != nil {
+		return errors.Wrap(err, "mapping [elasticsearch] section")
 	}
 
 	// ****************************
