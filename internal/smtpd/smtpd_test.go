@@ -2,11 +2,18 @@ package smtpd
 
 import (
 	"crypto/tls"
+	"encoding/json"
 	"errors"
 	"fmt"
+	"gitee.com/phper95/pkg/aws_s3"
+	"gitee.com/phper95/pkg/mq"
+	"gitee.com/phper95/pkg/strutil"
+	"github.com/Shopify/sarama"
+	"math/rand"
 	"net/smtp"
 	"os"
 	"path/filepath"
+	"strconv"
 	"testing"
 	"time"
 
@@ -14,6 +21,25 @@ import (
 	"github.com/phper95/mail-server/internal/db"
 	"github.com/phper95/mail-server/internal/log"
 	"github.com/phper95/mail-server/internal/tools"
+)
+
+type MailMsg struct {
+	Id       int64  `json:"id"`
+	Uid      int64  `json:"uid"`
+	Type     int    `json:"type"`
+	MailFrom string `json:"from"`
+	MailTo   string `json:"to"`
+	Subject  string `json:"subject"`
+	SendTime int64  `json:"send_time"`
+}
+
+const (
+	Host   = "127.0.0.1:8333"
+	Bucket = "test-bucket"
+	SK     = "admin123"
+	Region = "weed"
+	Path   = "mail_content/"
+	Topic  = "mail"
 )
 
 var localhostCert = []byte(`-----BEGIN CERTIFICATE-----
@@ -209,6 +235,23 @@ func initDbMysql() {
 	time.Sleep(1 * time.Second)
 }
 
+func initKafka() {
+	err := mq.InitAsyncKafkaProducer(mq.DefaultKafkaAsyncProducer,
+		[]string{"127.0.0.1:9092"}, nil)
+	if err != nil {
+		fmt.Println("InitAsyncKafkaProducer err", err, "client", mq.DefaultKafkaAsyncProducer)
+		panic(err)
+	}
+}
+
+func initS3() {
+	err := aws_s3.InitService(aws_s3.DefaultClientName, SK, "", Region, Host)
+	if err != nil {
+		fmt.Println("s3 init error", err)
+		panic(err)
+	}
+}
+
 // go test -run TestDnsQuery
 //DnsQuery Test
 func TestDnsQuery(t *testing.T) {
@@ -284,12 +327,12 @@ func SendMailTest(addr string, a Auth, from string, to []string, msg []byte) err
 }
 
 // go test -v ./internal/smtpd -run TestSendMailLocal
-func TestSendMailLocal(t *testing.T) {
+func T_TestSendMailLocal(t *testing.T) {
 	initDb()
 
 	now := time.Now().Format("2006-01-02 15:04:05")
 
-	tEmail := "2550702985@qq.com"
+	tEmail := "phper95@163.com"
 	fEmail := "admin@tt.com"
 
 	content := fmt.Sprintf("From: <%s>\r\nSubject: Hello mail-server[%s]\r\nTo: <%s>\r\n\r\nHi! yes is test. mail-server ok?", fEmail, now, tEmail)
@@ -430,6 +473,52 @@ func B_BenchmarkMailDbPush(b *testing.B) {
 	b.StopTimer()
 }
 
-func TestLen(t *testing.T) {
-	fmt.Println(len(dict))
+func TestMailToKafka(t *testing.T) {
+	initKafka()
+	initS3()
+	msg := MailMsg{
+		Id:       0,
+		Uid:      0,
+		Type:     1,
+		MailFrom: "admin@tt.com",
+		MailTo:   "phper95@163.com",
+		Subject:  "",
+		SendTime: 0,
+	}
+	for i := 0; i < 5000000; i++ {
+		//上传邮件内容
+		content := GetRandomEmailContent()
+		aws_s3.GetS3Client(aws_s3.DefaultClientName).PutObj(Path+strconv.Itoa(i), Bucket, strutil.StringToBytes(content))
+		//投递kafka
+		msg.Id = int64(i)
+		msg.Uid = int64(i)
+		msg.Subject = "测试邮件" + strconv.Itoa(i)
+		msg.SendTime = time.Now().Unix()
+		b, err := json.Marshal(msg)
+		if err != nil {
+			t.Error(err)
+		}
+		mq.GetKafkaAsyncProducer(mq.DefaultKafkaAsyncProducer).Send(&sarama.ProducerMessage{
+			Topic: Topic,
+			Key:   mq.KafkaMsgValueStrEncoder(strconv.FormatInt(msg.Id, 10)),
+			Value: mq.KafkaMsgValueEncoder(b),
+		})
+	}
+
+}
+
+func GetRandomEmailContent() string {
+	content := ""
+	dicIndex := make([]int, 0)
+	maxIndex := len(dict) - 1
+	for i := 0; i < 5000; i++ {
+		rand.Seed(time.Now().UnixNano())
+		//随机生成100以内的正整数
+		dicIndex = append(dicIndex, rand.Intn(maxIndex))
+	}
+	for _, index := range dicIndex {
+		content += dict[index]
+	}
+	fmt.Println(dicIndex)
+	return content
 }

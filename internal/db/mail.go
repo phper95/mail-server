@@ -11,11 +11,11 @@ import (
 )
 
 type Mail struct {
-	Id                int64  `gorm:"primaryKey"`
-	Uid               int64  `gorm:"index;comment:UserID"`
-	Type              int    `gorm:"index;comment:0:Send;1:Received"`
-	MailFrom          string `gorm:"size:50;comment:Mail From"`
-	MailFromInContent string `gorm:"text;comment:Mail From Name In Content"`
+	Id                int64  `gorm:"primaryKey" json:"id"`
+	Uid               int64  `gorm:"index;comment:UserID" json:"uid"`
+	Type              int    `gorm:"index;comment:0:Send;1:Received" json:"type"`
+	MailFrom          string `gorm:"size:50;comment:Mail From" json:"from"`
+	MailFromInContent string `gorm:"text;comment:Mail From Name In Content" json:"content"`
 	MailTo            string `gorm:"size:50;comment:Receive mail"`
 	Subject           string `gorm:"size:191;comment:Subject"`
 	SubjectIndex      string `gorm:"index;size:191;comment:Index Subject"`
