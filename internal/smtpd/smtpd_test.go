@@ -24,13 +24,14 @@ import (
 )
 
 type MailMsg struct {
-	Id       int64  `json:"id"`
-	Uid      int64  `json:"uid"`
-	Type     int    `json:"type"`
-	MailFrom string `json:"from"`
-	MailTo   string `json:"to"`
-	Subject  string `json:"subject"`
-	SendTime int64  `json:"send_time"`
+	Operation string `json:"operation"`
+	Id        int64  `json:"id"`
+	Uid       int64  `json:"uid"`
+	Type      int    `json:"type"`
+	MailFrom  string `json:"from"`
+	MailTo    string `json:"to"`
+	Subject   string `json:"subject"`
+	SendTime  int64  `json:"send_time"`
 }
 
 const (
@@ -494,6 +495,7 @@ func TestMailToKafka(t *testing.T) {
 		msg.Uid = int64(i)
 		msg.Subject = "测试邮件" + strconv.Itoa(i)
 		msg.SendTime = time.Now().Unix()
+		msg.Operation = "create"
 		b, err := json.Marshal(msg)
 		if err != nil {
 			t.Error(err)
