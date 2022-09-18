@@ -486,10 +486,14 @@ func TestMailToKafka(t *testing.T) {
 		Subject:  "",
 		SendTime: 0,
 	}
-	for i := 0; i < 5000000; i++ {
+	for i := 1; i < 5000000; i++ {
 		//上传邮件内容
 		content := GetRandomEmailContent()
-		aws_s3.GetS3Client(aws_s3.DefaultClientName).PutObj(Path+strconv.Itoa(i), Bucket, strutil.StringToBytes(content))
+		err := aws_s3.GetS3Client(aws_s3.DefaultClientName).PutObj(Path+strconv.Itoa(i), Bucket, strutil.StringToBytes(content))
+		if err != nil {
+			log.Errorf("PutObj error %v", err)
+			continue
+		}
 		//投递kafka
 		msg.Id = int64(i)
 		msg.Uid = int64(i)
@@ -515,12 +519,11 @@ func GetRandomEmailContent() string {
 	maxIndex := len(dict) - 1
 	for i := 0; i < 5000; i++ {
 		rand.Seed(time.Now().UnixNano())
-		//随机生成100以内的正整数
+		//随机生成maxIndex以内的正整数
 		dicIndex = append(dicIndex, rand.Intn(maxIndex))
 	}
 	for _, index := range dicIndex {
 		content += dict[index]
 	}
-	fmt.Println(dicIndex)
 	return content
 }

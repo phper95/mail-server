@@ -40,7 +40,13 @@ go build
 ```shell
 ./mail-server.exe service
 ```
+
 [![运行截图](./screenshot/运行截图.png)](/screenshot/运行截图.png)
+
+
+邮件服务整体架构
+
+[![邮件服务整体架构](./screenshot/邮件服务整体架构.png)](/screenshot/邮件服务整体架构.png)
 
 [![Go](https://github.com/phper95/mail-server/actions/workflows/go.yml/badge.svg)](https://github.com/phper95/mail-server/actions/workflows/go.yml)
 [![CodeQL](https://github.com/phper95/mail-server/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/phper95/mail-server/actions/workflows/codeql-analysis.yml)
